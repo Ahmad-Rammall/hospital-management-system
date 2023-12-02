@@ -1,0 +1,7 @@
+.right-container{
+    background: url('../../../assets/doctors.jpg');
+    background-size: cover;
+    width: 50%;
+    width: 100%;
+    flex-basis: 50%;
+}

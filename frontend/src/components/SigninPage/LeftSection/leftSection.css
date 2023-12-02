@@ -1,0 +1,27 @@
+.login-container{
+    /* width: 2000px; */
+    height: 100vh;
+    flex-basis: 50%;
+}
+
+.input{
+    margin-bottom: 1.2rem;
+}
+
+.input-field{
+    width: 250px;
+    height: 30px;
+    border-radius: 10px;
+    margin: 5px 0;
+}
+
+.login-btn{
+    background-color: var(--orange);
+    width: 250px;
+    height: 30px;
+    color: wheat;
+    font-size: 20px;
+    font-weight: bold;
+    border: 0;
+    border-radius: 5px;
+}
