@@ -19,7 +19,7 @@ $query->bind_param('s', $username);
 $query->execute();
 $query->store_result();
 $num_rows = $query->num_rows;
-$query->bind_result($username, $password_got , $role);
+$query->bind_result($username, $password_got, $role);
 $query->fetch();
 
 
@@ -29,16 +29,12 @@ if ($num_rows == 0 || $password != $password_got) {
     echo json_encode($response);
 } else {
     if ($password == $password_got) {
-        $response['status'] = 'logged in';
-        $response['username'] = $username;
-        $response['password'] = $password_got;
-        $response['role'] = $role;
-        echo json_encode($response);
-
 
         // Create a token payload 
         $tokenPayload = [
             'username' => $username,
+            'password' => $password,
+            'role' => $role,
         ];
 
         // Encode the payload into a JWT
@@ -48,5 +44,7 @@ if ($num_rows == 0 || $password != $password_got) {
 
         //Generated Token
         $token = "$header.$payload." . base64_encode($signature);
+        $response['token'] = $token;
+        echo json_encode($token);
     }
 };

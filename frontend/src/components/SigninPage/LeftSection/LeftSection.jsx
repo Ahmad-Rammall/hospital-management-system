@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import {useNavigate} from 'react-router-dom'
 import axios from "axios";
 
 import "./leftSection.css";
@@ -6,6 +7,9 @@ import "./leftSection.css";
 function LeftSection() {
   const [username, setUsername] = useState(0);
   const [password, setPassword] = useState("");
+  const [role , setRole] = useState('');
+
+  const navigate = useNavigate()
 
   const login = async (e) => {
     e.preventDefault()
@@ -17,8 +21,23 @@ function LeftSection() {
           password,
         }
       );
-      const result = response.data;
-      console.log(result);
+
+      const token = response.data;
+
+      //Save token to localstorage
+      localStorage.setItem('token',token)
+
+      setRole(JSON.parse(atob(token.split('.')[1])).role)
+
+      switch (role) {
+        case "admin":
+          navigate('/admin')
+          break;
+      
+        default:
+          break;
+      }
+
     } catch (error) {
       console.error(error);
     }
