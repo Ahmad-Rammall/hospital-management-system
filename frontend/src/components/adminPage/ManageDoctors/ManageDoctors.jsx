@@ -9,8 +9,6 @@ function ManageDoctors() {
   const [doctors, setDoctors] = useState([]);
   const [modalOpened , setOpened] = useState(false)
 
-
-
   const getDoctors = async () => {
     try {
       const response = await axios.get(
@@ -27,33 +25,13 @@ function ManageDoctors() {
     setOpened(!modalOpened);
   }
 
-  const addNewDoctor = async (username, name, phone, password, specialization) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:80/Hospital-Management-System/server/manageDR.php",
-        {
-          username,
-          name,
-          phone,
-          specialization,
-          password
-        }
-      );
-
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error adding user:", error);
-    }
-  };
-
   useEffect(() => {
     getDoctors();
-    addNewDoctor('doc13' , 'doc 13' , 12313 , '123' , 'asdsad')
   }, []);
 
   return (
     <div className="flex center column container">
-      <Modal opened={modalOpened} manageModal={manageModal} addNewDoctor={addNewDoctor} btn_text="Add"/>
+      <Modal opened={modalOpened} manageModal={manageModal} btn_text="Add"/>
       <button className="add-doctor-btn" onClick={manageModal}>Add Doctor</button>
 
       <table>
@@ -67,8 +45,8 @@ function ManageDoctors() {
           <th>Password</th>
           <th>Options</th>
         </tr>
-        {doctors.map((d) => (
-          <DoctorRow key={d.userId} doctors={d} />
+        {doctors.map((d,index) => (
+          <DoctorRow key={index} doctors={d} />
         ))}
       </table>
     </div>

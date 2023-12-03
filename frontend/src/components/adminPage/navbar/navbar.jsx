@@ -11,7 +11,6 @@ function navbar() {
         <div className="nav-item">Manage Patients</div>
         <div className="nav-item">Rooms Reservations</div>
       </div>
-      <ManageDoctors />
     </>
   );
 }

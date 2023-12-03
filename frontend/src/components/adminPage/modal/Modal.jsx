@@ -3,68 +3,78 @@ import axios from "axios";
 
 import "./modal.css";
 
-function Modal({ opened, manageModal, btn_text, addNewDoctor }) {
+function Modal({ opened, manageModal, btn_text }) {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [specialization, setSpec] = useState("");
 
+  const addNewDoctor = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:80/Hospital-Management-System/server/manageDR.php",
+        {
+          username,
+          name,
+          phone,
+          specialization,
+          password
+        }
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error adding user:", error);
+    }
+  };
+
   return (
     <div className={opened ? "popup open-popup" : "popup"} id="popup">
       <form
         action=""
         method="post"
-        onSubmit={
-          btn_text === "Add"
-            ? () => {
-                addNewDoctor(username, name, phone, password, specialization);
-              }
-            : ""
-        }
+        onSubmit={addNewDoctor}
       >
-        <div class="center-popup">
+        <div className="center-popup">
           <input
             type="text"
             placeholder="Add Username"
             id="popupText"
             name="username"
-          />
-          <input
-            type="text"
-            placeholder="Add Full Name"
-            id=""
-            name="name"
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             type="text"
+            placeholder="Add Full Name"
+            name="name"
+            onChange={(e) => setName(e.target.value)}
+          />
+          <input
+            type="text"
             placeholder="Phone Number"
-            id=""
             name="phone"
             onChange={(e) => setPhone(e.target.value)}
           />
           <input
             type="text"
             placeholder="Password"
-            id=""
             name="password"
             onChange={(e) => setPassword(e.target.value)}
           />
           <input
             type="text"
             placeholder="Specialization"
-            id=""
             name="spec"
             onChange={(e) => setSpec(e.target.value)}
           />
         </div>
 
-        <div class="popup-buttons">
+        <div className="popup-buttons">
           <input type="submit" value={btn_text} className="popup-button"/>
           <button
             className="popup-button"
-            id="cancelPopup"
+            type="button"
             onClick={manageModal}
           >
             Cancel
