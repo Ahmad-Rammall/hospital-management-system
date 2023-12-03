@@ -2,6 +2,8 @@
 include("connection.php");
 
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Content-Type');
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
     $query = $mysqli->prepare('select users.UserID ,patients.PatientID, users.Username , users.Full_Name , users.Phone_Number , patients.Medical_History , users.Password from users,patients where users.UserID=patients.UserID');
@@ -15,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     while ($query->fetch()) {
         $patient = [
             'UserID' => $userId,
-            'PatientID' => $doctorId,
+            'PatientID' => $patientId,
             'UserName' => $username,
             'Name' => $name,
             'Phone' => $phone,
@@ -38,13 +40,16 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
-        $username = $_POST["username"];
-        $name = $_POST["name"];
-        $phone = $_POST["phone"];
-        $med = $_POST["med"];
-        $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+        $json_data = file_get_contents("php://input");
+        $data = json_decode( $json_data, true );
 
-        $add_user_query = $mysqli->prepare("INSERT INTO users (Username, Full_Name, Phone_Number,Password,Role) VALUES ('$username', '$name',$phone, '$password' , 'doctor')");
+        $username = $data["username"];
+        $name = $data["name"];
+        $phone = $data["phone"];
+        $med = $data["med"];
+        $password = password_hash($data["password"], PASSWORD_DEFAULT);
+
+        $add_user_query = $mysqli->prepare("INSERT INTO users (Username, Full_Name, Phone_Number,Password,Role) VALUES ('$username', '$name',$phone, '$password' , 'patient')");
 
         $user_done = $add_user_query->execute();
         $userId = $mysqli->insert_id;
