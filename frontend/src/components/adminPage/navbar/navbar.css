@@ -1,7 +1,22 @@
 .nav-container{
     justify-content: space-evenly;
-    height: 100px;
+    align-items: center;
+    height: 80px;
     background-color: var(--blue);
-    color: whitesmoke;
+    color: rgba(245, 245, 245, 0.877);
     font-size: 20px;
+}
+
+.selected{
+    color: white;
+    border-bottom: 5px solid white;
+    padding-bottom: 5px;
+    font-size: 21px;
+}
+
+.nav-item:hover{
+    color: white;
+    border-bottom: 5px solid white;
+    padding-bottom: 5px;
+    font-size: 21px;
 }

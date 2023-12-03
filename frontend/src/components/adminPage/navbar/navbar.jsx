@@ -1,15 +1,19 @@
-import React from 'react'
+import React from "react";
+import ManageDoctors from "../ManageDoctors/ManageDoctors";
 
-import './navbar.css'
+import "./navbar.css";
 
 function navbar() {
   return (
-    <div className='flex center nav-container'>
-        <div>Manage Doctors</div>
-        <div>Manage Patients</div>
-        <div>Rooms Reservations</div>
-    </div>
-  )
+    <>
+      <div className="flex nav-container">
+        <div className="nav-item">Manage Doctors</div>
+        <div className="nav-item">Manage Patients</div>
+        <div className="nav-item">Rooms Reservations</div>
+      </div>
+      <ManageDoctors />
+    </>
+  );
 }
 
-export default navbar
+export default navbar;
