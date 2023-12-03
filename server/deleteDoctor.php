@@ -3,8 +3,14 @@
 include("connection.php");
 
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST');
 
-$userId = $_POST["userId"];
+header('Access-Control-Allow-Headers: Content-Type');
+
+$json_data = file_get_contents("php://input");
+$data = json_decode( $json_data, true );
+
+$userId = $data["userId"];
 
 $delete_query = $mysqli->prepare("DELETE FROM doctors WHERE UserID = ?");
 $delete_query->bind_param("i", $userId);

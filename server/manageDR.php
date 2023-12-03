@@ -2,6 +2,8 @@
 include("connection.php");
 
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Content-Type');
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
     $query = $mysqli->prepare('select users.UserID ,doctors.DoctorID, users.Username , users.Full_Name , users.Phone_Number , doctors.specialization , users.Password from users,doctors where users.UserID=doctors.UserID');
@@ -38,18 +40,22 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
-        $username = $_POST["username"];
-        $name = $_POST["name"];
-        $phone = $_POST["phone"];
-        $spec = $_POST["specialization"];
-        $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+        $json_data = file_get_contents("php://input");
+        $data = json_decode( $json_data, true );
 
-        $add_user_query = $mysqli->prepare("INSERT INTO users (Username, Full_Name, Phone_Number,Password,Role) VALUES ('$username', '$name',$phone, '$password' , 'doctor')");
+        $username = $data["username"];
+        $name = $data["name"];
+        $phone = $data["phone"];
+        $spec = $data["specialization"];
+        $password = password_hash($data["password"], PASSWORD_DEFAULT);
 
+        $add_user_query = $mysqli->prepare("INSERT INTO users (Username, Full_Name, Phone_Number, Password, Role) VALUES (?, ?, ?, ?, 'doctor')");
+        $add_user_query->bind_param("ssis", $username, $name, $phone, $password);
         $user_done = $add_user_query->execute();
         $userId = $mysqli->insert_id;
 
-        $add_doctor_query = $mysqli->prepare("INSERT INTO doctors (UserID ,Specialization) VALUES ($userId,'$spec')");
+        $add_doctor_query = $mysqli->prepare("INSERT INTO doctors (UserID, Specialization) VALUES (?, ?)");
+        $add_doctor_query->bind_param("is", $userId, $spec);
         $doctor_done = $add_doctor_query->execute();
     } catch (\Throwable $th) {
         throw $th;

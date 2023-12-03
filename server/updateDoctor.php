@@ -5,13 +5,15 @@ include("connection.php");
 header('Access-Control-Allow-Origin: *');
 
 try {
+    $json_data = file_get_contents("php://input");
+    $data = json_decode( $json_data, true );
 
-    $userIdToUpdate = $_POST["userId"];
-    $username = $_POST["username"];
-    $name = $_POST["name"];
-    $phone = $_POST["phone"];
-    $spec = $_POST["specialization"];
-    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+    $userIdToUpdate = $data["userId"];
+    $username = $data["username"];
+    $name = $data["name"];
+    $phone = $data["phone"];
+    $spec = $data["specialization"];
+    $password = password_hash($data["password"], PASSWORD_DEFAULT);
 
     $update_user_query = $mysqli->prepare("UPDATE users SET Username = ?, Full_Name = ?, Phone_Number = ?, Password = ? WHERE UserID = ?");
     $update_user_query->bind_param("ssisi", $username, $name, $phone, $password, $userIdToUpdate);

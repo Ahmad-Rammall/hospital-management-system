@@ -10,20 +10,32 @@ function Modal({ opened, manageModal, btn_text }) {
   const [password, setPassword] = useState("");
   const [specialization, setSpec] = useState("");
 
-  const addNewDoctor = async () => {
+  const addNewDoctor = async (e) => {
+    e.preventDefault();
+    let formData = new FormData();
+    formData.append('username' , username)
+    formData.append('name' , name)
+    formData.append('phone' , phone)
+    formData.append('password' , password)
+    formData.append('specialization' , specialization)
+
     try {
       const response = await axios.post(
         "http://localhost:80/Hospital-Management-System/server/manageDR.php",
         {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
           username,
           name,
           phone,
+          password,
           specialization,
-          password
         }
       );
 
       console.log(response.data);
+
     } catch (error) {
       console.error("Error adding user:", error);
     }
@@ -31,52 +43,44 @@ function Modal({ opened, manageModal, btn_text }) {
 
   return (
     <div className={opened ? "popup open-popup" : "popup"} id="popup">
-      <form
-        action=""
-        method="post"
-        onSubmit={addNewDoctor}
-      >
+      <form action="" method="POST" >
         <div className="center-popup">
           <input
             type="text"
             placeholder="Add Username"
             id="popupText"
-            name="username"
+            value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             type="text"
             placeholder="Add Full Name"
-            name="name"
+            value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <input
             type="text"
             placeholder="Phone Number"
-            name="phone"
+            value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
           <input
             type="text"
             placeholder="Password"
-            name="password"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <input
             type="text"
             placeholder="Specialization"
-            name="spec"
+            value={specialization}
             onChange={(e) => setSpec(e.target.value)}
           />
         </div>
 
         <div className="popup-buttons">
-          <input type="submit" value={btn_text} className="popup-button"/>
-          <button
-            className="popup-button"
-            type="button"
-            onClick={manageModal}
-          >
+          <input type="submit" value={btn_text} className="popup-button" onClick={addNewDoctor}/>
+          <button className="popup-button" type="button" onClick={manageModal}>
             Cancel
           </button>
         </div>
