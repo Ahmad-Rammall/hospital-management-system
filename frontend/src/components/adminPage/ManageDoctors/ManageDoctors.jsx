@@ -46,7 +46,7 @@ function ManageDoctors() {
           <th>Options</th>
         </tr>
         {doctors.map((d,index) => (
-          <DoctorRow key={index} doctor={d} />
+          <DoctorRow key={index} doctor={d} manageModal={manageModal}/>
         ))}
       </table>
     </div>

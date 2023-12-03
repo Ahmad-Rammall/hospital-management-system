@@ -1,24 +1,19 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import "./modal.css";
 
-function Modal({ opened, manageModal, btn_text }) {
-  const [username, setUsername] = useState("");
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [specialization, setSpec] = useState("");
+function Modal({ opened, manageModal, btn_text, user }) {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState(user ? user?.UserName : "");
+  const [name, setName] = useState(user ? user?.Name : "");
+  const [phone, setPhone] = useState(user ? user?.Phone : "");
+  const [password, setPassword] = useState(user ? user?.Password : "");
+  const [specialization, setSpec] = useState(user ? user?.Spec : "");
 
   const addNewDoctor = async (e) => {
     e.preventDefault();
-    let formData = new FormData();
-    formData.append('username' , username)
-    formData.append('name' , name)
-    formData.append('phone' , phone)
-    formData.append('password' , password)
-    formData.append('specialization' , specialization)
-
     try {
       const response = await axios.post(
         "http://localhost:80/Hospital-Management-System/server/manageDR.php",
@@ -35,7 +30,31 @@ function Modal({ opened, manageModal, btn_text }) {
       );
 
       console.log(response.data);
+    } catch (error) {
+      console.error("Error adding user:", error);
+    }
+  };
 
+  const updateDoctor = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:80/Hospital-Management-System/server/updateDoctor.php",
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          userId: user.UserID,
+          username,
+          name,
+          phone,
+          password,
+          specialization,
+        }
+      );
+
+      console.log(response.data);
+      navigate(0);
     } catch (error) {
       console.error("Error adding user:", error);
     }
@@ -43,7 +62,7 @@ function Modal({ opened, manageModal, btn_text }) {
 
   return (
     <div className={opened ? "popup open-popup" : "popup"} id="popup">
-      <form action="" method="POST" >
+      <form action="" method="POST">
         <div className="center-popup">
           <input
             type="text"
@@ -79,7 +98,12 @@ function Modal({ opened, manageModal, btn_text }) {
         </div>
 
         <div className="popup-buttons">
-          <input type="submit" value={btn_text} className="popup-button" onClick={addNewDoctor}/>
+          <input
+            type="submit"
+            value={btn_text}
+            className="popup-button"
+            onClick={btn_text === "Add" ? addNewDoctor : updateDoctor}
+          />
           <button className="popup-button" type="button" onClick={manageModal}>
             Cancel
           </button>
