@@ -37,17 +37,27 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST["username"];
-    $name = $_POST["name"];
-    $phone = $_POST["phone"];
-    $spec = $_POST["specialization"];
-    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+    try {
+        $username = $_POST["username"];
+        $name = $_POST["name"];
+        $phone = $_POST["phone"];
+        $spec = $_POST["specialization"];
+        $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
-    $sql_add = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')";
+        $add_user_query = $mysqli->prepare("INSERT INTO users (Username, Full_Name, Phone_Number,Password,Role) VALUES ('$username', '$name',$phone, '$password' , 'doctor')");
 
-    if ($conn->query($sql_add) === TRUE) {
+        $user_done = $add_user_query->execute();
+        $userId = $mysqli->insert_id;
+
+        $add_doctor_query = $mysqli->prepare("INSERT INTO doctors (UserID ,Specialization) VALUES ($userId,'$spec')");
+        $doctor_done = $add_doctor_query->execute();
+    } catch (\Throwable $th) {
+        throw $th;
+    }
+
+    if ($user_done && $doctor_done) {
         echo json_encode("User added successfully.");
     } else {
-        echo json_encode("Error: " . $sql_add . "<br>" . $conn->error);
+        echo json_encode("Error Adding Doctor");
     }
 }
