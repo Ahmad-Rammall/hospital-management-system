@@ -3,13 +3,13 @@ include("connection.php");
 include('decodeJWT.php');
 
 $auth = $_SERVER['HTTP_AUTHORIZATION'];
-if(!decodeJWTs($auth)) {
+if (!decodeJWTs($auth)) {
     echo json_encode("Not Authorized");
     exit();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    $query = $mysqli->prepare('select users.UserID ,patients.PatientID, users.Username , users.Full_Name , users.Phone_Number , patients.Medical_History , users.Password from users,patients where users.UserID=patients.UserID');
+    $query = $mysqli->prepare('select users.UserID ,patients.PatientID, users.Username , users.Full_Name , users.Phone_Number , patients.Medical_HistoryID , users.Password from users,patients where users.UserID=patients.UserID');
     $query->execute();
     $query->store_result();
     $num_rows = $query->num_rows;
@@ -30,31 +30,27 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
         $patients[] = $patient;
     }
-
-    $response = [];
-
-    if ($num_rows == 0) {
-        $response['status'] = 'No Patients';
-        echo json_encode($response);
-    } else {
-        echo json_encode($patients, JSON_PRETTY_PRINT);
-    }
+    echo json_encode($patients, JSON_PRETTY_PRINT);
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    try {
-        $username = $_POST["username"];
-        $name = $_POST["name"];
-        $phone = $_POST["phone"];
-        $med = $_POST["med"];
-        $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+    $username = $_POST["username"];
+    $name = $_POST["name"];
+    $phone = $_POST["phone"];
+    $med = $_POST["med"];
+    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
+    try {
         $add_user_query = $mysqli->prepare("INSERT INTO users (Username, Full_Name, Phone_Number,Password,Role) VALUES ('$username', '$name',$phone, '$password' , 'patient')");
 
         $user_done = $add_user_query->execute();
         $userId = $mysqli->insert_id;
+    } catch (\Throwable $th) {
+        throw $th;
+    }
 
-        $add_patient_query = $mysqli->prepare("INSERT INTO patients (UserID ,Medical_History) VALUES ($userId,'$med')");
+    try {
+        $add_patient_query = $mysqli->prepare("INSERT INTO patients (UserID ,Medical_HistoryID) VALUES ($userId,$med)");
         $patient_done = $add_patient_query->execute();
     } catch (\Throwable $th) {
         throw $th;
