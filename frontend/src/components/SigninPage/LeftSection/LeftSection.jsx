@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {useNavigate} from 'react-router-dom'
 import axios from "axios";
+import { sendRequest } from "../../../helpers/request";
 
 import "./leftSection.css";
 
@@ -14,15 +15,14 @@ function LeftSection() {
   const login = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post(
-        "http://localhost:80/Hospital-Management-System/server/signin.php",
-        {
-          username,
-          password,
-        }
-      );
+      const response = await sendRequest({
+        body: {username , password},
+        route: "/signin",
+        method: "POST",
+      });
 
-      const token = response.data;
+      const token = response;
+      console.log(response);
 
       //Save token to localstorage
       localStorage.setItem('token',token)

@@ -1,18 +1,17 @@
 <?php
+
+use Firebase\JWT\JWT;
+
 include("connection.php");
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Content-Type');
-
-$secretKey = 'your_secret_key';
+$sec_key = 'your_secret_key';
 
 $postData = file_get_contents('php://input');
 $data = json_decode($postData, true);
 
 // Use $data array instead of $_POST
-$username = $data['username'];
-$password = $data['password'];
+$username = $_POST['username'];
+$password = $_POST['password'];
 
 $query = $mysqli->prepare('select Username,Password,Role from users where Username=?');
 $query->bind_param('s', $username);
@@ -37,14 +36,8 @@ if ($num_rows == 0 || $password != $password_got) {
             'role' => $role,
         ];
 
-        // Encode the payload into a JWT
-        $header = base64_encode(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
-        $payload = base64_encode(json_encode($tokenPayload));
-        $signature = hash_hmac('sha256', "$header.$payload", $secretKey, true);
+        $token = JWT::encode($tokenPayload , $sec_key , 'HS256');
 
-        //Generated Token
-        $token = "$header.$payload." . base64_encode($signature);
-        $response['token'] = $token;
         echo json_encode($token);
     }
 };

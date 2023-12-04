@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import './admin.css'
+
 import ManageDoctors from '../../components/adminPage/ManageDoctors/ManageDoctors'
 import ManagePatients from '../../components/adminPage/ManagePatients/ManagePatients'
 
