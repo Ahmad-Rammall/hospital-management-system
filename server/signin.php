@@ -4,7 +4,7 @@ use Firebase\JWT\JWT;
 
 include("connection.php");
 
-$sec_key = 'your_secret_key';
+$sec_key = 'my_secret_key';
 
 $username = $_POST['username'];
 $password = $_POST['password'];
@@ -17,23 +17,22 @@ $num_rows = $query->num_rows;
 $query->bind_result($username, $password_got, $role);
 $query->fetch();
 
-
+$pass_not_verified = password_verify($password, $password_got);
 $response = [];
-if ($num_rows == 0 || $password != $password_got) {
+
+if ($num_rows == 0 || $pass_not_verified) {
     $response['status'] = 'user not found';
     echo json_encode($response);
 } else {
-    if ($password == $password_got) {
 
-        // Create a token payload 
-        $tokenPayload = [
-            'username' => $username,
-            'password' => $password,
-            'role' => $role,
-        ];
+    // Create a token payload 
+    $tokenPayload = [
+        'username' => $username,
+        'password' => $password,
+        'role' => $role,
+    ];
 
-        $token = JWT::encode($tokenPayload , $sec_key , 'HS256');
+    $token = JWT::encode($tokenPayload, $sec_key, 'HS256');
 
-        echo json_encode($token);
-    }
+    echo json_encode($token);
 };

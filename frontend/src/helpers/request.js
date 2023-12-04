@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const token = localStorage.getItem('token');
+
 export const sendRequest = async ({ route, body, method = "GET" }) => {
   try {
     const response = await axios.request({
@@ -8,6 +10,7 @@ export const sendRequest = async ({ route, body, method = "GET" }) => {
       data: body,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization" : `${token}`
       },
     });
 

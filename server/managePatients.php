@@ -1,5 +1,12 @@
 <?php
 include("connection.php");
+include('decodeJWT.php');
+
+$auth = $_SERVER['HTTP_AUTHORIZATION'];
+if(!decodeJWTs($auth)) {
+    echo json_encode("Not Authorized");
+    exit();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
     $query = $mysqli->prepare('select users.UserID ,patients.PatientID, users.Username , users.Full_Name , users.Phone_Number , patients.Medical_History , users.Password from users,patients where users.UserID=patients.UserID');

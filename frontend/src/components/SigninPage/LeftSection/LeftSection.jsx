@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import { sendRequest } from "../../../helpers/request";
 
 import "./leftSection.css";
@@ -7,15 +7,15 @@ import "./leftSection.css";
 function LeftSection() {
   const [username, setUsername] = useState(0);
   const [password, setPassword] = useState("");
-  const [role , setRole] = useState('');
+  const [role, setRole] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const login = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const response = await sendRequest({
-        body: {username , password},
+        body: { username, password },
         route: "/signin",
         method: "POST",
       });
@@ -24,19 +24,24 @@ function LeftSection() {
       console.log(response);
 
       //Save token to localstorage
-      localStorage.setItem('token',token)
+      localStorage.setItem("token", token);
 
-      setRole(JSON.parse(atob(token.split('.')[1])).role)
+      setRole(JSON.parse(atob(token.split(".")[1])).role);
 
       switch (role) {
         case "admin":
-          navigate('/admin')
+          navigate("/admin");
           break;
-      
+        case "doctor":
+          navigate("/doctor");
+          break;
+        case "patient":
+          navigate("/patient");
+          break;
+
         default:
           break;
       }
-
     } catch (error) {
       console.error(error);
     }
@@ -62,11 +67,7 @@ function LeftSection() {
           />
         </div>
 
-        <input
-          type="submit"
-          value="Sign In"
-          className="login-btn"
-        />
+        <input type="submit" value="Sign In" className="login-btn" />
       </form>
     </div>
   );
