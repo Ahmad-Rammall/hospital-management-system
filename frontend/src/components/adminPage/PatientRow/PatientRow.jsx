@@ -1,9 +1,7 @@
 import React , {useState} from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { sendRequest } from "../../../helpers/request";
 import "../DoctorRow/doctorRow.css";
-import Modal from "../modal/Modal";
 import PatientModal from "../PatientModal/PatientModal";
 
 function PatientRow({patient}) {
@@ -16,17 +14,13 @@ function PatientRow({patient}) {
 
   const deletePatient = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:80/Hospital-Management-System/server/deletePatient.php",
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          userId: patient.UserID,
-        }
-      );
+      const response = await sendRequest({
+        body: {userId: patient.UserID},
+        route: "/deletePatient",
+        method: "POST",
+      });
 
-      console.log(response.data);
+      console.log(response);
       navigate(0);
     } catch (error) {
       console.error(error);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { sendRequest } from "../../../helpers/request";
 
 import "./manageDoctors.css";
 import DoctorRow from "../DoctorRow/DoctorRow";
@@ -11,11 +11,12 @@ function ManageDoctors() {
 
   const getDoctors = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:80/Hospital-Management-System/server/manageDR.php"
-      );
-      console.log(response.data);
-      setDoctors(response.data);
+
+      const response = await sendRequest({
+        route: "/manageDR",
+      });
+      console.log(response);
+      setDoctors(response);
     } catch (error) {
       console.error(error);
     }

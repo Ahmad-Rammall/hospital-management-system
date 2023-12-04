@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { sendRequest } from "../../../helpers/request";
 import { useNavigate } from "react-router-dom";
 
 import "./modal.css";
@@ -15,21 +15,13 @@ function Modal({ opened, manageModal, btn_text, user }) {
   const addNewDoctor = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:80/Hospital-Management-System/server/manageDR.php",
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          username,
-          name,
-          phone,
-          password,
-          specialization,
-        }
-      );
+      const response = await sendRequest({
+        body: {username, name, phone, password, specialization},
+        route: "/manageDR",
+        method: "POST",
+      });
 
-      console.log(response.data);
+      console.log(response);
     } catch (error) {
       console.error("Error adding user:", error);
     }
@@ -38,20 +30,11 @@ function Modal({ opened, manageModal, btn_text, user }) {
   const updateDoctor = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:80/Hospital-Management-System/server/updateDoctor.php",
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          userId: user.UserID,
-          username,
-          name,
-          phone,
-          password,
-          specialization,
-        }
-      );
+      const response = await sendRequest({
+        body: {userId: user.UserID, username, name, phone, password, specialization},
+        route: "/updateDoctor",
+        method: "POST",
+      });
 
       console.log(response.data);
       navigate(0);

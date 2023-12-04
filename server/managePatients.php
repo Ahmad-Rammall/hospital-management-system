@@ -36,14 +36,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
-        $json_data = file_get_contents("php://input");
-        $data = json_decode( $json_data, true );
-
-        $username = $data["username"];
-        $name = $data["name"];
-        $phone = $data["phone"];
-        $med = $data["med"];
-        $password = password_hash($data["password"], PASSWORD_DEFAULT);
+        $username = $_POST["username"];
+        $name = $_POST["name"];
+        $phone = $_POST["phone"];
+        $med = $_POST["med"];
+        $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
         $add_user_query = $mysqli->prepare("INSERT INTO users (Username, Full_Name, Phone_Number,Password,Role) VALUES ('$username', '$name',$phone, '$password' , 'patient')");
 

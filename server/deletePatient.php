@@ -2,10 +2,7 @@
 
 include("connection.php");
 
-$json_data = file_get_contents("php://input");
-$data = json_decode($json_data, true);
-
-$userId = $data["userId"];
+$userId = $_POST["userId"];
 
 $delete_query = $mysqli->prepare("DELETE FROM patients WHERE UserID = ?");
 $delete_query->bind_param("i", $userId);

@@ -6,10 +6,6 @@ include("connection.php");
 
 $sec_key = 'your_secret_key';
 
-$postData = file_get_contents('php://input');
-$data = json_decode($postData, true);
-
-// Use $data array instead of $_POST
 $username = $_POST['username'];
 $password = $_POST['password'];
 

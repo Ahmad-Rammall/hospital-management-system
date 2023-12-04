@@ -1,5 +1,5 @@
 import React , {useState} from "react";
-import axios from "axios";
+import { sendRequest } from "../../../helpers/request";
 import { useNavigate } from "react-router-dom";
 
 import "./doctorRow.css";
@@ -15,17 +15,13 @@ function DoctorRow({ doctor }) {
 
   const deleteDoctor = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:80/Hospital-Management-System/server/deleteDoctor.php",
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          userId: doctor.UserID,
-        }
-      );
+      const response = await sendRequest({
+        body: {userId: doctor.UserID},
+        route: "/deleteDoctor",
+        method: "POST",
+      });
 
-      console.log(response.data);
+      console.log(response);
       navigate(0);
     } catch (error) {
       console.error(error);
