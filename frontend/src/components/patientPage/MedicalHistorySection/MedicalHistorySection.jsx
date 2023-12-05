@@ -1,5 +1,4 @@
 import React, { useState , useEffect} from "react";
-import PatientRow from "../PatientRow/PatientRow";
 import { sendRequest } from "../../../helpers/request";
 
 function MedicalHistorySection({patientId}) {

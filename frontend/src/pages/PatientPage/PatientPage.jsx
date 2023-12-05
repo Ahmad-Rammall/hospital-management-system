@@ -9,6 +9,7 @@ function PatientPage() {
   const [bookApp, setBookApp] = useState(false);
   const [cancelApp, setCancelApp] = useState(false);
   const [patientId, setPatientId] = useState(0);
+  const [decodedToken , setDecodedToken] = useState('')
 
   const openMedicalHistorysection = () => {
     setMed(!openMed);
@@ -33,11 +34,13 @@ function PatientPage() {
     if (token) {
       setPatientId(JSON.parse(atob(token.split(".")[1])).patientId);
     }
+    setDecodedToken(JSON.parse(atob(token.split(".")[1])).role)
   }, []);
 
   return (
     <div>
-      <div className="flex nav-container">
+
+      {decodedToken === 'patient' ? (<div className="flex nav-container">
         <div
           className={openMed ? "nav-item selected" : "nav-item"}
           onClick={openMedicalHistorysection}
@@ -56,7 +59,7 @@ function PatientPage() {
         >
           Cancel Appointments
         </div>
-      </div>
+      </div>) : <div className="error">Not Authorized</div>}
 
       {openMed ? <MedicalHistorySection patientId={patientId} /> : ""}
       {bookApp ? <BookAppsection patientId={patientId}/> : ""}
