@@ -20,6 +20,8 @@ $query->fetch();
 $pass_not_verified = password_verify($password, $password_got);
 $response = [];
 
+$expTime = time() + 60;
+
 if ($num_rows == 0 || $pass_not_verified) {
     $response['status'] = 'user not found';
     echo json_encode($response);
@@ -30,6 +32,7 @@ if ($num_rows == 0 || $pass_not_verified) {
         'username' => $username,
         'password' => $password,
         'role' => $role,
+        'exp' => $expTime
     ];
 
     $token = JWT::encode($tokenPayload, $sec_key, 'HS256');

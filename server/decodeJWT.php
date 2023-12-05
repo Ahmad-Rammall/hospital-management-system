@@ -8,8 +8,8 @@ function decodeJWTs($token)
 {
     $sec_key = 'my_secret_key';
     try {
-        $decode = JWT::decode($token, new Key($sec_key, 'HS256'));
-        return $decode;
+        JWT::decode($token, new Key($sec_key, 'HS256'));
+        return true;
     } catch (Exception $e) {
         return false;
     }

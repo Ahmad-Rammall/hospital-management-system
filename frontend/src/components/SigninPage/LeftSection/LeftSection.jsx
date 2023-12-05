@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { sendRequest } from "../../../helpers/request";
 
@@ -7,7 +7,6 @@ import "./leftSection.css";
 function LeftSection() {
   const [username, setUsername] = useState(0);
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
 
   const navigate = useNavigate();
 
@@ -20,15 +19,12 @@ function LeftSection() {
         method: "POST",
       });
 
-      const token = response;
       console.log(response);
 
       //Save token to localstorage
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", response);
 
-      setRole(JSON.parse(atob(token.split(".")[1])).role);
-
-      switch (role) {
+      switch (JSON.parse(atob(response.split(".")[1])).role) {
         case "admin":
           navigate("/admin");
           break;
@@ -38,18 +34,17 @@ function LeftSection() {
         case "patient":
           navigate("/patient");
           break;
-
         default:
+          console.log("No Token");
           break;
       }
     } catch (error) {
       console.error(error);
     }
   };
-
   return (
     <div className="login-container flex column center">
-      <form action="" method="POST" onSubmit={login}>
+      <form action="" method="POST" onSubmit={login}> 
         <div className="input">
           <p>UserID</p>
           <input
@@ -66,7 +61,6 @@ function LeftSection() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-
         <input type="submit" value="Sign In" className="login-btn" />
       </form>
     </div>

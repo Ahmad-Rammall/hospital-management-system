@@ -3,8 +3,8 @@ include("connection.php");
 include('decodeJWT.php');
 
 $auth = $_SERVER['HTTP_AUTHORIZATION'];
-if(!decodeJWTs($auth)) {
-    echo json_encode("Not Authorized");
+if (!decodeJWTs($auth)) {
+    echo json_encode([]);
     exit();
 }
 
