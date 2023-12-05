@@ -5,7 +5,7 @@ include('decodeJWT.php');
 
 $auth = $_SERVER['HTTP_AUTHORIZATION'];
 if (!decodeJWTs($auth)) {
-    echo json_encode("Not Authorized");
+    echo json_encode([]);
     exit();
 }
 
@@ -17,21 +17,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $query->bind_param("i", $patientId);
     $query->execute();
     $query->store_result();
-    $num_rows = $query->num_rows;
     $query->bind_result($medId, $sugeries, $allergies, $notes);
+    $query->fetch();
 
-    $histories = [];
+    $response['MedId'] = $medId;
+    $response['Surgeries'] = $sugeries;
+    $response['Allergies'] = $allergies;
+    $response['Notes'] = $notes;
 
-    while ($query->fetch()) {
-        $history = [
-            'MedId' => $medId,
-            'Surgeries' => $sugeries,
-            'Allergies' => $allergies,
-            'Notes' => $notes,
-        ];
-
-        $histories[] = $history;
-    }
-
-    echo json_encode($histories, JSON_PRETTY_PRINT);
-}
+    echo json_encode($response, JSON_PRETTY_PRINT);}
