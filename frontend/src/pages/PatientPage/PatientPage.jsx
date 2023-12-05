@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import MedicalHistorySection from "../../components/patientPage/MedicalHistorySection/MedicalHistorySection";
 import ManageAppSection from "../../components/patientPage/ManageAppSection/ManageAppSection";
@@ -8,6 +8,7 @@ function PatientPage() {
   const [openMed, setMed] = useState(false);
   const [manageApp, setManageApp] = useState(false);
   const [openApp, setOpenApp] = useState(false);
+  const [patientId, setPatientId] = useState(0);
 
   const openMedicalHistorysection = () => {
     setMed(!openMed);
@@ -26,6 +27,13 @@ function PatientPage() {
     setManageApp(false);
     setOpenApp(!openApp);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setPatientId(JSON.parse(atob(token.split(".")[1])).patientId);
+    }
+  }, []);
 
   return (
     <div>
@@ -50,7 +58,7 @@ function PatientPage() {
         </div>
       </div>
 
-      {openMed ? <MedicalHistorySection /> : ""}
+      {openMed ? <MedicalHistorySection patientId={patientId} /> : ""}
       {manageApp ? <ManageAppSection /> : ""}
       {openApp ? <ViewAppSection /> : ""}
     </div>

@@ -2,7 +2,7 @@ import React, { useState , useEffect} from "react";
 import PatientRow from "../PatientRow/PatientRow";
 import { sendRequest } from "../../../helpers/request";
 
-function MedicalHistorySection() {
+function MedicalHistorySection({patientId}) {
   const [history, setHistory] = useState([]);
 
   const getMedicationHistory = async () => {
@@ -10,7 +10,7 @@ function MedicalHistorySection() {
       const response = await sendRequest({
         method: "POST",
         route: "/getPatientMedicalHist",
-        body: {patientId: 9},
+        body: {patientId},
       });
       console.log(response);
       setHistory(response);
