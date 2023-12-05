@@ -1,31 +1,31 @@
 import React, { useState, useEffect } from "react";
 
 import MedicalHistorySection from "../../components/patientPage/MedicalHistorySection/MedicalHistorySection";
-import ManageAppSection from "../../components/patientPage/ManageAppSection/ManageAppSection";
-import ViewAppSection from "../../components/patientPage/ViewAppSection/ViewAppSection";
+import BookAppsection from "../../components/patientPage/BookAppointmentsSection/BookAppSection";
+import CancelAppSection from "../../components/patientPage/CancelAppSection/CancelAppSection";
 
 function PatientPage() {
   const [openMed, setMed] = useState(false);
-  const [manageApp, setManageApp] = useState(false);
-  const [openApp, setOpenApp] = useState(false);
+  const [bookApp, setBookApp] = useState(false);
+  const [cancelApp, setCancelApp] = useState(false);
   const [patientId, setPatientId] = useState(0);
 
   const openMedicalHistorysection = () => {
     setMed(!openMed);
-    setManageApp(false);
-    setOpenApp(false);
+    setBookApp(false);
+    setCancelApp(false);
   };
 
   const openManageAppSection = () => {
     setMed(false);
-    setManageApp(!manageApp);
-    setOpenApp(false);
+    setBookApp(!bookApp);
+    setCancelApp(false);
   };
 
   const openAppSection = () => {
     setMed(false);
-    setManageApp(false);
-    setOpenApp(!openApp);
+    setBookApp(false);
+    setCancelApp(!cancelApp);
   };
 
   useEffect(() => {
@@ -45,13 +45,13 @@ function PatientPage() {
           View Medical History
         </div>
         <div
-          className={manageApp ? "nav-item selected" : "nav-item"}
+          className={bookApp ? "nav-item selected" : "nav-item"}
           onClick={openManageAppSection}
         >
-          Manage Appointments
+          Book Appointments
         </div>
         <div
-          className={openApp ? "nav-item selected" : "nav-item"}
+          className={cancelApp ? "nav-item selected" : "nav-item"}
           onClick={openAppSection}
         >
           Cancel Appointments
@@ -59,8 +59,8 @@ function PatientPage() {
       </div>
 
       {openMed ? <MedicalHistorySection patientId={patientId} /> : ""}
-      {manageApp ? <ManageAppSection patientId={patientId}/> : ""}
-      {openApp ? <ViewAppSection patientId={patientId}/> : ""}
+      {bookApp ? <BookAppsection patientId={patientId}/> : ""}
+      {cancelApp ? <CancelAppSection patientId={patientId}/> : ""}
     </div>
   );
 }
