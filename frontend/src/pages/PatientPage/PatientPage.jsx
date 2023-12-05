@@ -54,13 +54,13 @@ function PatientPage() {
           className={openApp ? "nav-item selected" : "nav-item"}
           onClick={openAppSection}
         >
-          View Appointments
+          Cancel Appointments
         </div>
       </div>
 
       {openMed ? <MedicalHistorySection patientId={patientId} /> : ""}
-      {manageApp ? <ManageAppSection /> : ""}
-      {openApp ? <ViewAppSection /> : ""}
+      {manageApp ? <ManageAppSection patientId={patientId}/> : ""}
+      {openApp ? <ViewAppSection patientId={patientId}/> : ""}
     </div>
   );
 }

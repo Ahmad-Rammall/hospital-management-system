@@ -5,7 +5,7 @@ include('decodeJWT.php');
 
 $auth = $_SERVER['HTTP_AUTHORIZATION'];
 if (!decodeJWTs($auth)) {
-    echo json_encode("Not Authorized");
+    echo json_encode([]);
     exit();
 }
 
